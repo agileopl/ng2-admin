@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
+import { AUTH_PROVIDERS } from 'angular2-jwt';
+import { AuthGuard } from './common/auth.guard';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -17,11 +19,15 @@ import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
+import {Signup} from "./signup/signup";
+import {Login} from "./login/login";
+import {Home} from "./home/home";
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
-  GlobalState
+  GlobalState,
+  AuthGuard, ...AUTH_PROVIDERS
 ];
 
 type StoreType = {
@@ -36,7 +42,7 @@ type StoreType = {
 @NgModule({
   bootstrap: [App],
   declarations: [
-    App
+    App, Home, Login, Signup
   ],
   imports: [ // import Angular's modules
     BrowserModule,
