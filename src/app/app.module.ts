@@ -22,12 +22,15 @@ import { PagesModule } from './pages/pages.module';
 import {Signup} from "./signup/signup";
 import {Login} from "./login/login";
 import {Home} from "./home/home";
+import {AuthService} from "./common/auth.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
   GlobalState,
-  AuthGuard, ...AUTH_PROVIDERS
+  AuthGuard,
+  ...AUTH_PROVIDERS,
+    AuthService
 ];
 
 type StoreType = {

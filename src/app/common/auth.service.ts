@@ -3,6 +3,8 @@ import {APP_ENV} from "../app.env";
 import {Http} from "@angular/http";
 import {contentHeaders} from "./headers";
 
+const TOKEN_STORAGE_ID = 'id_token';
+
 @Injectable()
 export class AuthService {
 
@@ -16,13 +18,17 @@ export class AuthService {
         .subscribe(
             response => {
               console.log('res', response.json().token);
-              localStorage.setItem('id_token', response.json().token);
+              localStorage.setItem(TOKEN_STORAGE_ID, response.json().token);
             },
             error => {
               alert(error.text());
               console.log(error.text());
             }
         );
+  }
+
+  logout() {
+    localStorage.removeItem(TOKEN_STORAGE_ID);
   }
 
 }
