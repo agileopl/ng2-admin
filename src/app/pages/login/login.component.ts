@@ -1,14 +1,14 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {Component, ViewEncapsulation} from "@angular/core";
+import {FormGroup, AbstractControl, FormBuilder, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {Http} from "@angular/http";
-import {contentHeaders} from "../../common/headers";
+import {AuthService} from "../../common/auth.service";
 
 @Component({
   selector: 'login',
   encapsulation: ViewEncapsulation.None,
   styles: [require('./login.scss')],
   template: require('./login.html'),
+  providers: [AuthService]
 })
 export class Login {
 
@@ -17,7 +17,7 @@ export class Login {
   public password:AbstractControl;
   public submitted:boolean = false;
 
-  constructor(public router: Router, public http: Http, fb:FormBuilder) {
+  constructor(public router: Router, fb:FormBuilder, private authService: AuthService) {
     this.form = fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -30,20 +30,9 @@ export class Login {
   public onSubmit(values:Object):void {
     this.submitted = true;
     if (this.form.valid) {
-      // your code goes here
-      // console.log(values);
-      let body = JSON.stringify({ username: this.email.value, password: this.password.value });
-      this.http.post('http://localhost:3001/sessions/create', body, { headers: contentHeaders })
-          .subscribe(
-              response => {
-                localStorage.setItem('id_token', response.json().id_token);
-                this.router.navigate(['home']);
-              },
-              error => {
-                alert(error.text());
-                console.log(error.text());
-              }
-          );
+      this.authService.login(this.email.value, this.password.value).add(() => {
+        this.router.navigate(['home']);
+      });
     }
   }
 
